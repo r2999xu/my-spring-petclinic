@@ -16,7 +16,7 @@ pipeline {
     stage('SonarQube analysis') {
       steps {
         withSonarQubeEnv('SonarQube') {
-          sh './mvnw sonar:sonar -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=admin -Dsonar.password=admin'
+          sh './mvnw sonar:sonar -Dsonar.host.url=http://172.17.0.3:9000 -Dsonar.login=admin -Dsonar.password=admin'
         }
       }
     }
