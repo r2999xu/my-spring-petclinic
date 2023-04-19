@@ -1,0 +1,49 @@
+---
+- name: Deploy Petclinic App
+  hosts: web_server
+  become: yes
+  tasks:
+    - name: Install Java
+      apt:
+        name: openjdk-11-jdk
+        state: present
+        update_cache: yes
+
+    - name: Download Petclinic JAR
+      get_url:
+        url: https://drive.google.com/file/d/11iEeBLX7xtki_hQ6Q9ajbSH7hPgbKszr/view?usp=share_link
+        dest: /opt/petclinic.jar
+        mode: '0755'
+
+    - name: Install and configure Nginx
+      apt:
+        name: nginx
+        state: present
+      notify: restart nginx
+
+    - name: Configure Nginx for Petclinic app
+      template:
+        src: templates/petclinic-nginx.conf.j2
+        dest: /etc/nginx/sites-available/petclinic
+      notify: restart nginx
+
+    - name: Enable Petclinic Nginx configuration
+      file:
+        src: /etc/nginx/sites-available/petclinic
+        dest: /etc/nginx/sites-enabled/petclinic
+        state: link
+      notify: restart nginx
+
+    - name: Start Petclinic app
+      systemd:
+        name: petclinic
+        state: started
+        daemon_reload: yes
+        enabled: yes
+        masked: no
+
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
