@@ -1,2 +1,2 @@
  [webservers] 
- web_server ansible_host=192.168.16.2 ansible_port=22 ansible_user=runhai ansible_ssh_pass=2239gjkm ansible_become_pass=2239gjkm
+ web_server ansible_host=192.168.48.2 ansible_port=22 ansible_user=runhai ansible_ssh_pass=2239gjkm ansible_become_pass=2239gjkm
