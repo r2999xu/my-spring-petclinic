@@ -1,0 +1,12 @@
+---
+- name: Deploy Petclinic App
+  hosts: web
+  become: yes
+  tasks:
+    - name: Copy Petclinic App
+      copy:
+        src: target/petclinic.war
+        dest: /var/www/html/petclinic.war
+
+    - name: Install and configure web server
+      include_tasks: install_web_server.yml
