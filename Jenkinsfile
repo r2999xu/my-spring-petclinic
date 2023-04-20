@@ -1,10 +1,9 @@
 pipeline {
     agent any
     tools {
-     jdk 'JDK 20'
-     maven 'Maven'
+        jdk 'JDK 20'
+        maven 'Maven'
     }
-
 
     stages {
         stage('Clone Repository') {
@@ -21,7 +20,7 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
-                sh 'ansible-playbook -i /var/jenkins_home/ansible_hosts deploy_petclinic.yml'
+                sh 'sudo ansible-playbook -i /var/jenkins_home/ansible_hosts deploy_petclinic.yml'
             }
         }
     }
