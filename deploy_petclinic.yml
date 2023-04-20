@@ -1,12 +1,40 @@
 ---
 - name: Deploy Petclinic App
-  hosts: web
+  hosts: web_server
   become: yes
   tasks:
-    - name: Copy Petclinic App
-      copy:
-        src: target/petclinic.war
-        dest: /var/www/html/petclinic.war
+    - name: Set Docker socket permissions
+      ansible.builtin.file:
+        path: /var/run/docker.sock
+        mode: '0666'
+      become: yes
+      become_user: root
 
-    - name: Install and configure web server
-      include_tasks: install_web_server.yml
+    # Add your existing tasks to deploy the Petclinic app below this line
+
+    - name: Pull Petclinic image
+      ansible.builtin.docker_image:
+        name: springcommunity/spring-petclinic
+        source: pull
+
+    - name: Stop Petclinic container if it exists
+      ansible.builtin.docker_container:
+        name: petclinic
+        state: stopped
+      ignore_errors: true
+
+    - name: Remove Petclinic container if it exists
+      ansible.builtin.docker_container:
+        name: petclinic
+        state: absent
+      ignore_errors: true
+
+    - name: Start Petclinic container
+      ansible.builtin.docker_container:
+        name: petclinic
+        image: springcommunity/spring-petclinic
+        state: started
+        published_ports:
+          - "8080:8080"
+        restart_policy: always
+
