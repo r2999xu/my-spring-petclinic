@@ -20,7 +20,7 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
-                sh 'sudo ansible-playbook -i /var/jenkins_home/ansible_hosts deploy_petclinic.yml'
+                sh 'ansible-playbook -i /var/jenkins_home/ansible_hosts deploy_petclinic.yml'
             }
         }
     }
