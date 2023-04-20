@@ -1,0 +1,32 @@
+---
+- name: Install Java
+  apt:
+    name: openjdk-11-jre
+    state: present
+    update_cache: yes
+
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Remove default Nginx configuration
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Create Nginx configuration for Petclinic App
+  template:
+    src: petclinic_nginx.conf.j2
+    dest: /etc/nginx/sites-available/petclinic
+
+- name: Enable Petclinic App configuration
+  file:
+    src: /etc/nginx/sites-available/petclinic
+    dest: /etc/nginx/sites-enabled/petclinic
+    state: link
+
+- name: Restart Nginx
+  systemd:
+    name: nginx
+    state: restarted
