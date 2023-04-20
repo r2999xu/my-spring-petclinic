@@ -20,7 +20,17 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
-                sh 'ansible-playbook -i /var/jenkins_home/ansible_hosts deploy_petclinic.yml'
+                script {
+                    // Get the host's IP address
+                    def hostIP = sh(returnStdout: true, script: 'ip route get 1 | awk \'{print $NF;exit}\'').trim()
+                    echo "Host IP: ${hostIP}"
+
+                    // Generate a temporary Ansible inventory file
+                    writeFile file: 'ansible_hosts', text: "[web]\n${hostIP} ansible_connection=docker ansible_docker_extra_args='-H tcp://localhost:2375' ansible_user=root"
+
+                    // Run the Ansible playbook
+                    sh 'ansible-playbook -i ansible_hosts deploy_petclinic.yml'
+                }
             }
         }
     }
