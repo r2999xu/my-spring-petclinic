@@ -22,6 +22,12 @@ pipeline {
             }
         }
 
+        stage('Archive JAR file') {
+            steps {
+                archiveArtifacts artifacts: 'target/petclinic.jar', fingerprint: true
+            }
+        }
+
         stage('Deploy Application') {
             steps {
                 sh 'ansible-playbook -i ansible_hosts deploy_petclinic.yml'
