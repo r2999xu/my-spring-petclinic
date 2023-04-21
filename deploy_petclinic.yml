@@ -5,6 +5,13 @@
   gather_facts: no
 
   tasks:
+    - name: Install sudo
+      become: yes
+      apt:
+        name: sudo
+        state: present
+        update_cache: yes
+
     - name: Create a directory for the PetClinic app
       become: yes
       file:
