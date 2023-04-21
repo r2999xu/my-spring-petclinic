@@ -5,6 +5,11 @@
   gather_facts: no
   
   tasks:
+    - name: Create a directory for the PetClinic app
+      become: yes
+      file:
+        path: /opt/petclinic
+        state: directory
 
     - name: Fetch PetClinic JAR file from Jenkins
       delegate_to: localhost
@@ -17,7 +22,7 @@
       become: yes
       copy:
         src: /tmp/petclinic.jar
-        dest: /opt/spring-petclinic.jar
+        dest: /opt/petclinic/spring-petclinic.jar
         mode: 0644
      
     - name: Download Oracle JDK 20
