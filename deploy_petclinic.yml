@@ -25,10 +25,6 @@
         dest: /opt/petclinic/spring-petclinic.jar
         mode: 0644
 
-    - name: Kill existing PetClinic process
-      become: yes
-      shell: pkill -f spring-petclinic.jar || true
-
     - name: Run PetClinic application
       become: yes
       command: nohup java -jar /opt/petclinic/spring-petclinic.jar > /opt/petclinic/petclinic.log 2>&1 &
