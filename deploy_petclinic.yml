@@ -11,12 +11,11 @@
         path: /opt/petclinic
         state: directory
 
-    - name: Copy PetClinic JAR file
-      become: yes
-      copy:
+    - name: Synchronize PetClinic JAR file
+      synchronize:
         src: /var/jenkins_home/workspace/petclinic_pipeline/target/petclinic.jar
         dest: /opt/petclinic/spring-petclinic.jar
-        mode: 0644
+        mode: push
 
     - name: Create PetClinic service file
       become: yes
