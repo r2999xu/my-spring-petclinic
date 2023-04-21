@@ -12,7 +12,19 @@
           - nginx
         state: present
         update_cache: yes
-
+    - name: Configure Nginx as a reverse proxy
+      become: yes
+      blockinfile:
+        path: /etc/nginx/sites-available/default
+        insertafter: '^\s*root /var/www/html;'
+        block: |
+          location / {
+            proxy_pass http://127.0.0.1:8081;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          }
     - name: Ensure Nginx is running and enabled
       systemd:
         name: nginx
