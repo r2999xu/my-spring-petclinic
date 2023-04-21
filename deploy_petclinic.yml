@@ -10,7 +10,6 @@
       file:
         path: /opt/petclinic
         state: directory
-        sudo: yes
 
     - name: Fetch PetClinic JAR file from Jenkins
       delegate_to: localhost
