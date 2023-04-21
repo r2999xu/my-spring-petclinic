@@ -15,13 +15,13 @@
       delegate_to: localhost
       fetch:
         src: /var/jenkins_home/workspace/deploy_using_ansible/target/petclinic.jar
-        dest: /home/petclinic.jar
+        dest: /tmp/petclinic.jar
         flat: yes
 
     - name: Copy PetClinic JAR file to target machine
       become: yes
       copy:
-        src: /home/petclinic.jar
+        src: /tmp/petclinic.jar
         dest: /opt/petclinic/spring-petclinic.jar
         mode: 0644
      
