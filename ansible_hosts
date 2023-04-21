@@ -1,2 +1,2 @@
 [web_server]
-web_server ansible_host=192.168.96.2 ansible_port=22 ansible_user=runhaix ansible_ssh_pass=111111 ansible_become_pass=111111
+web_server ansible_host=192.168.96.3 ansible_port=22 ansible_user=runhaix ansible_ssh_pass=111111 ansible_become_pass=111111
