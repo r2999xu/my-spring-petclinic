@@ -14,7 +14,7 @@
     - name: Fetch PetClinic JAR file from Jenkins
       delegate_to: localhost
       fetch:
-        src: /var/jenkins_home/workspace/petclinic_pipeline/target/petclinic.jar
+        src: /var/jenkins_home/workspace/deploy_using_ansible/target/petclinic.jar
         dest: /tmp/petclinic.jar
         flat: yes
 
