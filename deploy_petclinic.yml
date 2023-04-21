@@ -25,30 +25,13 @@
         dest: /opt/petclinic/spring-petclinic.jar
         mode: 0644
 
-    - name: Create PetClinic service file
+    - name: Kill existing PetClinic process
       become: yes
-      copy:
-        content: |
-          [Unit]
-          Description=PetClinic App
+      shell: pkill -f spring-petclinic.jar || true
 
-          [Service]
-          User=runhaix
-          ExecStart=/usr/bin/java -jar /opt/petclinic/spring-petclinic.jar
-          Restart=on-failure
-
-          [Install]
-          WantedBy=multi-user.target
-        dest: /etc/systemd/system/petclinic.service
-
-    - name: Reload systemd daemon
+    - name: Run PetClinic application
       become: yes
-      systemd:
-        daemon_reload: yes
-
-    - name: Ensure PetClinic app is running and enabled
-      become: yes
-      systemd:
-        name: petclinic
-        state: started
-        enabled: yes
+      command: nohup java -jar /opt/petclinic/spring-petclinic.jar > /opt/petclinic/petclinic.log 2>&1 &
+      args:
+        chdir: /opt/petclinic
+        creates: /opt/petclinic/petclinic.log
