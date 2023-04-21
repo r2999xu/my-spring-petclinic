@@ -11,11 +11,19 @@
         path: /opt/petclinic
         state: directory
 
-    - name: Synchronize PetClinic JAR file
-      synchronize:
+    - name: Fetch PetClinic JAR file from Jenkins
+      delegate_to: localhost
+      fetch:
         src: /var/jenkins_home/workspace/petclinic_pipeline/target/petclinic.jar
+        dest: /tmp/petclinic.jar
+        flat: yes
+
+    - name: Copy PetClinic JAR file to target machine
+      become: yes
+      copy:
+        src: /tmp/petclinic.jar
         dest: /opt/petclinic/spring-petclinic.jar
-        mode: push
+        mode: 0644
 
     - name: Create PetClinic service file
       become: yes
