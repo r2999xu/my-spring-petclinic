@@ -4,10 +4,6 @@
   remote_user: runhaix
   gather_facts: no
   
-  vars:
-  ansible_tmp_path: /tmp/.ansible-${USER}/tmp
-  remote_tmp: "{{ ansible_tmp_path }}"
-
   tasks:
     - name: Create a directory for the PetClinic app
       become: yes
