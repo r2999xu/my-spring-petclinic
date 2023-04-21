@@ -24,6 +24,41 @@
         src: /tmp/petclinic.jar
         dest: /opt/petclinic/spring-petclinic.jar
         mode: 0644
+     
+    - name: Download Oracle JDK 20
+      become: yes
+      get_url:
+        url: https://download.oracle.com/java/20/archive/jdk-20_linux-aarch64_bin.tar.gz
+        dest: /tmp/jdk-20_linux-aarch64_bin.tar.gz
+        mode: 0644
+
+    - name: Extract Oracle JDK 20
+      become: yes
+      unarchive:
+        src: /tmp/jdk-20_linux-aarch64_bin.tar.gz
+        dest: /opt
+        remote_src: yes
+        creates: /opt/jdk-20
+
+    - name: Set JAVA_HOME environment variable
+      become: yes
+      lineinfile:
+        path: /etc/environment
+        line: JAVA_HOME="/opt/jdk-20"
+        state: present
+
+    - name: Add Java to PATH
+      become: yes
+      lineinfile:
+        path: /etc/environment
+        line: 'PATH="/opt/jdk-20/bin:$PATH"'
+        state: present
+
+    - name: Reload environment variables
+      become: yes
+      command: source /etc/environment
+      args:
+        executable: /bin/bash
 
     - name: Run PetClinic application
       become: yes
