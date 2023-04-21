@@ -1,7 +1,7 @@
 ---
 - name: Configure web server
   hosts: web_server
-  remote_user: runhai
+  remote_user: runhaix
   gather_facts: no
 
   tasks:
