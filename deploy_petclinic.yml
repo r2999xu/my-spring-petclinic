@@ -17,7 +17,7 @@
       become: yes
       copy:
         src: /tmp/petclinic.jar
-        dest: /opt/petclinic/spring-petclinic.jar
+        dest: /opt/spring-petclinic.jar
         mode: 0644
      
     - name: Download Oracle JDK 20
