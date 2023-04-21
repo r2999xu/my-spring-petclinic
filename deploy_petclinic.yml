@@ -56,9 +56,7 @@
 
     - name: Reload environment variables
       become: yes
-      command: source /etc/environment
-      args:
-        executable: /bin/bash
+      shell: source /etc/environment
 
     - name: Run PetClinic application
       become: yes
