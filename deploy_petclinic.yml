@@ -41,4 +41,5 @@
         creates: /opt/jdk-20
 
     - name: Execute the jar file
-      shell: java -jar -Dserver.port=8090 -Dserver.address=172.26.0.3 /opt/petclinic/spring-petclinic.jar
+      shell: /opt/jdk-20/bin/java -jar -Dserver.port=8090 -Dserver.address=172.26.0.3 /opt/petclinic/spring-petclinic.jar
+
