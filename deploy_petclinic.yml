@@ -7,7 +7,7 @@
     - name: Copy JAR file to target container
       copy:
         src: "{{ jar_file_path }}"
-        dest: "/"
+        dest: /opt/spring-petclinic.jar
 
     - name: Execute the jar file
       shell: java -jar -Dserver.port=8090 -Dserver.address=172.26.0.3 /petclinic.jar
