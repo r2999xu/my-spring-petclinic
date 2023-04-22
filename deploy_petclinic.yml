@@ -1,14 +1,62 @@
-- name: Copy JAR file to container and execute
+---
+- name: Deploy and run PetClinic application
   hosts: web_server
   remote_user: runhaix
+  gather_facts: no
+  
   tasks:
-    - name: Copy JAR file to target container
-      ansible.builtin.copy:
-        src: /var/jenkins_home/workspace/deploy_using_ansible/target/petclinic.jar
-        dest: /opt/petclinic/spring-petclinic.jar
-        owner: runhaix
-        group: runhaix
-        mode: '0644'
+    - name: Create a directory for the PetClinic app
+      become: yes
+      file:
+        path: /opt/petclinic
+        state: directory
 
-    - name: Execute the jar file
-      shell: java -jar -Dserver.port=8090 -Dserver.address=172.26.0.3 /opt/petclinic/spring-petclinic.jar
+    - name: Fetch PetClinic JAR file from Jenkins
+      delegate_to: localhost
+      fetch:
+        src: /var/jenkins_home/workspace/deploy_using_ansible/target/petclinic.jar
+        dest: /tmp/petclinic.jar
+        flat: yes
+
+    - name: Copy PetClinic JAR file to target machine
+      become: yes
+      copy:
+        src: /tmp/petclinic.jar
+        dest: /opt/petclinic/spring-petclinic.jar
+        mode: 0644
+     
+    - name: Download Oracle JDK 20
+      become: yes
+      get_url:
+        url: https://download.oracle.com/java/20/archive/jdk-20_linux-aarch64_bin.tar.gz
+        dest: /tmp/jdk-20_linux-aarch64_bin.tar.gz
+        mode: 0644
+
+    - name: Extract Oracle JDK 20
+      become: yes
+      unarchive:
+        src: /tmp/jdk-20_linux-aarch64_bin.tar.gz
+        dest: /opt
+        remote_src: yes
+        creates: /opt/jdk-20
+
+    - name: Set JAVA_HOME environment variable
+      become: yes
+      lineinfile:
+        path: /etc/environment
+        line: JAVA_HOME="/opt/jdk-20"
+        state: present
+
+    - name: Add Java to PATH
+      become: yes
+      lineinfile:
+        path: /etc/environment
+        line: 'PATH="/opt/jdk-20/bin:$PATH"'
+        state: present
+
+    - name: Run PetClinic application
+      become: yes
+      command: nohup java -jar /opt/petclinic/spring-petclinic.jar > /opt/petclinic/petclinic.log 2>&1 &
+      args:
+        chdir: /opt/petclinic
+        creates: /opt/petclinic/petclinic.log
