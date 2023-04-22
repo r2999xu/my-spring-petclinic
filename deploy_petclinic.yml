@@ -1,13 +1,14 @@
 - name: Copy JAR file to container and execute
   hosts: web_server
   remote_user: runhaix
-  vars:
-    jar_file_path: /var/jenkins_home/workspace/deploy_using_ansible/target/petclinic.jar
   tasks:
     - name: Copy JAR file to target container
-      copy:
-        src: "{{ jar_file_path }}"
-        dest: /opt/spring-petclinic.jar
+      ansible.builtin.copy:
+        src: /var/jenkins_home/workspace/deploy_using_ansible/target/petclinic.jar
+        dest: /opt/petclinic/spring-petclinic.jar
+        owner: runhaix
+        group: runhaix
+        mode: '0644'
 
     - name: Execute the jar file
-      shell: java -jar -Dserver.port=8090 -Dserver.address=172.26.0.3 /petclinic.jar
+      shell: java -jar -Dserver.port=8090 -Dserver.address=172.26.0.3 /opt/petclinic/spring-petclinic.jar
