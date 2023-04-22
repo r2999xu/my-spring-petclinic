@@ -2,7 +2,7 @@
   hosts: web_server
   remote_user: runhaix
   vars:
-    jar_file_path: /var/jenkins_home/workspace/petclinic_pipeline/target/petclinic.jar
+    jar_file_path: /var/jenkins_home/workspace/deploy_using_ansible/target/petclinic.jar
   tasks:
     - name: Copy JAR file to target container
       copy:
